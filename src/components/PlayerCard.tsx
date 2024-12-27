@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {
     Box,
     Button,
@@ -7,6 +7,8 @@ import {
     CardHeader,
     Chip,
     IconButton,
+    ListItemIcon,
+    ListItemText,
     Menu,
     MenuItem,
     Stack,
@@ -14,6 +16,8 @@ import {
 } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
+import UndoIcon from '@mui/icons-material/Undo';
+import AddIcon from '@mui/icons-material/Add';
 
 import type {Game, Player} from "../types";
 import {usePlayerHistory} from "../db/selectors";
@@ -32,23 +36,24 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
     const playerHistory = usePlayerHistory(game.id, player.id);
 
     // Score
-    const [newScore, setNewScore] = useState(0);
+    const [scoreDelta, setScoreDelta] = useState(0);
     const [saveTimeout, setSaveTimeout] = useState<ReturnType<typeof setInterval> | null>(null);
 
     const handleScoreChange = (delta: number) => {
-        setNewScore(newScore + delta);
+        const score = scoreDelta + delta
+        setScoreDelta(score);
         saveTimeout && clearTimeout(saveTimeout);
-        setSaveTimeout(setTimeout(() => handleScoreSave, SAVE_TIMEOUT))
+        setSaveTimeout(setTimeout(() => handleScoreSave(score), SAVE_TIMEOUT))
     }
 
-    const handleScoreSave = async () => {
-        await addPlayerScore(game.id, player.id, newScore);
+    const handleScoreSave = async (score: number) => {
+        await addPlayerScore(game.id, player.id, score);
         handleScoreCancel();
     }
 
     const handleScoreCancel = () => {
         saveTimeout && clearTimeout(saveTimeout);
-        setNewScore(0);
+        setScoreDelta(0);
     }
 
     const handleScoreAddZero = async () => {
@@ -73,11 +78,19 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
     };
 
     // Render
+    const historyTimeline = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (!historyTimeline.current) {
+            return
+        }
+        historyTimeline.current.scrollLeft = historyTimeline.current.scrollWidth;
+    }, [playerHistory])
+
     return (
-        <Card sx={{bgcolor: playerPalette[index]}}>
+        <Card sx={{bgcolor: playerPalette[index], color: 'primary.contrastText'}}>
             <CardHeader
                 title={player.name}
-                action={<Chip label={playerHistory?.length ?? 0}/>}
+                action={<Chip label={playerHistory?.length ?? 0} sx={{color: 'primary.contrastText'}}/>}
             />
             <CardContent>
                 <Stack spacing={1} alignItems="space-between">
@@ -94,7 +107,7 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
                             aria-expanded={scoreMenuOpen ? 'true' : undefined}
                             onClick={handleScoreEditClick}
                         >
-                            <Typography variant="h2">{player.score}</Typography>
+                            <Typography variant="h2" color='primary.contrastText'>{player.score}</Typography>
                         </Button>
                         <Menu
                             id="score-edit-menu"
@@ -105,16 +118,26 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
                                 'aria-labelledby': 'score-edit-button',
                             }}
                         >
-                            <MenuItem onClick={handleScoreAddZero}>Add zero</MenuItem>
-                            <MenuItem onClick={handleScoreUndoLast}>Undo last</MenuItem>
+                            <MenuItem onClick={handleScoreAddZero}>
+                                <ListItemIcon>
+                                    <AddIcon fontSize="small"/>
+                                </ListItemIcon>
+                                <ListItemText>Add zero</ListItemText>
+                            </MenuItem>
+                            <MenuItem onClick={handleScoreUndoLast}>
+                                <ListItemIcon>
+                                    <UndoIcon fontSize="small"/>
+                                </ListItemIcon>
+                                <ListItemText>Undo last</ListItemText>
+                            </MenuItem>
                         </Menu>
-                        {newScore !== 0 ? (
+                        {scoreDelta !== 0 ? (
                             <Stack direction="row" sx={{position: 'absolute', inset: 0}}>
                                 <IconButton onClick={handleScoreCancel}>
                                     <ClearIcon/>
                                 </IconButton>
-                                <Typography variant="h3">{newScore}</Typography>
-                                <IconButton onClick={handleScoreSave}>
+                                <Typography variant="h3">{scoreDelta}</Typography>
+                                <IconButton onClick={() => handleScoreSave(scoreDelta)}>
                                     <CheckIcon/>
                                 </IconButton>
                             </Stack>
@@ -125,6 +148,11 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
                         <Button variant="contained" onClick={() => handleScoreChange(+5)}>+5</Button>
                         <Button variant="contained" onClick={() => handleScoreChange(+10)}>+10</Button>
                     </Stack>
+                </Stack>
+                <Stack direction="row" spacing={1} sx={{overflowX: 'auto'}} ref={historyTimeline}>
+                    {playerHistory?.map((score, index) => (
+                        <Typography key={index}>{score.value}</Typography>
+                    ))}
                 </Stack>
             </CardContent>
         </Card>

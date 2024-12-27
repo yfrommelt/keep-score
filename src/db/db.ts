@@ -26,7 +26,7 @@ type RoundScoreEntity = {
     value: number;
     gameId: number;
     playerId: number;
-    updatedAt: Date;
+    createdAt: Date;
 }
 
 const db = new Dexie('KeepScoreDatabase') as Dexie & {
@@ -38,9 +38,9 @@ const db = new Dexie('KeepScoreDatabase') as Dexie & {
 
 db.version(1).stores({
     players: '++id, &name',
-    games: '++id',
-    gameScores: '++id, gameId, playerId, order',
-    roundScores: '++id, gameId, playerId, updatedAt',
+    games: '++id, updatedAt',
+    gameScores: '++id, [gameId+playerId], order',
+    roundScores: '++id, [gameId+playerId], updatedAt',
 });
 
 export type {PlayerEntity, GameEntity, GameScoreEntity, RoundScoreEntity};

@@ -4,7 +4,7 @@ import type {Game} from "../types";
 
 export function useGameHistory(): Game[] {
     return useLiveQuery(async () => {
-        const games = await db.games.toArray();
+        const games = await db.games.orderBy('updatedAt').toArray();
 
         return await Promise.all(games.map(enhanceGameWithPlayers));
     }) as Game[];
@@ -23,7 +23,7 @@ export function useGameDashboard(gameId: number): Game {
 
 export function usePlayerHistory(gameId: number, playerId: number): RoundScoreEntity[] {
     return useLiveQuery(async () => {
-        return db.roundScores.where({gameId, playerId}).toArray();
+        return db.roundScores.where({gameId, playerId}).sortBy('createdAt');
     }, [gameId, playerId]) as RoundScoreEntity[];
 }
 
