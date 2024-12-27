@@ -100,15 +100,32 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
                         <Button variant="contained" onClick={() => handleScoreChange(-10)}>-10</Button>
                     </Stack>
                     <Box sx={{position: 'relative'}}>
-                        <Button
-                            id="score-edit-button"
-                            aria-controls={scoreMenuOpen ? 'score-edit-menu' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={scoreMenuOpen ? 'true' : undefined}
-                            onClick={handleScoreEditClick}
-                        >
-                            <Typography variant="h2" color='primary.contrastText'>{player.score}</Typography>
-                        </Button>
+                        {scoreDelta !== 0 ? (
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                            >
+                                <IconButton onClick={handleScoreCancel}>
+                                    <ClearIcon/>
+                                </IconButton>
+                                <Button>
+                                    <Typography variant="h3" color='primary.contrastText'>{scoreDelta}</Typography>
+                                </Button>
+                                <IconButton onClick={() => handleScoreSave(scoreDelta)}>
+                                    <CheckIcon/>
+                                </IconButton>
+                            </Stack>
+                        ) : (
+                            <Button
+                                id="score-edit-button"
+                                aria-controls={scoreMenuOpen ? 'score-edit-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={scoreMenuOpen ? 'true' : undefined}
+                                onClick={handleScoreEditClick}
+                            >
+                                <Typography variant="h3" color='primary.contrastText'>{player.score}</Typography>
+                            </Button>
+                        )}
                         <Menu
                             id="score-edit-menu"
                             anchorEl={scoreMenuAnchorEl}
@@ -131,17 +148,6 @@ export default function PlayerCard({game, player, index}: PlayerCardProps) {
                                 <ListItemText>Undo last</ListItemText>
                             </MenuItem>
                         </Menu>
-                        {scoreDelta !== 0 ? (
-                            <Stack direction="row" sx={{position: 'absolute', inset: 0}}>
-                                <IconButton onClick={handleScoreCancel}>
-                                    <ClearIcon/>
-                                </IconButton>
-                                <Typography variant="h3">{scoreDelta}</Typography>
-                                <IconButton onClick={() => handleScoreSave(scoreDelta)}>
-                                    <CheckIcon/>
-                                </IconButton>
-                            </Stack>
-                        ) : null}
                     </Box>
                     <Stack direction="row" spacing={1}>
                         <Button variant="contained" onClick={() => handleScoreChange(+1)}>+1</Button>
