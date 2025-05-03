@@ -1,5 +1,5 @@
 import { Container, Fab, Typography } from "@mui/material";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { useGameHistory } from "./db/selectors";
 import GameCard from "./components/GameCard";
 import { Masonry } from "@mui/lab";

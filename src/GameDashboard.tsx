@@ -1,6 +1,6 @@
-import { Container, Grid2 as Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { useGameDashboard } from "./db/selectors";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import PlayerCard from "./components/PlayerCard";
 
 export default function GameDashboard() {

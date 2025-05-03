@@ -14,7 +14,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { formatDate } from "../tools/format";
 import { playerPalette } from "../tools/playerPalette";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Game } from "../types";
 
 type GameCardProps = {
