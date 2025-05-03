@@ -66,7 +66,7 @@ export async function addPlayerScore(
         gameId,
         playerId,
         value,
-        updatedAt: new Date(),
+        createdAt: new Date(),
       });
       await updateGameScore(gameId, playerId);
     },

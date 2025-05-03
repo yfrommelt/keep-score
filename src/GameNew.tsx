@@ -3,14 +3,14 @@ import {
   Box,
   Button,
   Container,
-  Grid2 as Grid,
+  Grid,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import { createGame } from "./db/actions";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { usePlayers } from "./db/selectors";
 import { playerPalette } from "./tools/playerPalette";

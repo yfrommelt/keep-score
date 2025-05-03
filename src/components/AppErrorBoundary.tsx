@@ -4,7 +4,7 @@ import type { PropsWithChildren } from "react";
 import type { FallbackProps } from "react-error-boundary";
 import { ErrorBoundary } from "react-error-boundary";
 import { Alert, Button, Stack } from "@mui/material";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 type AppErrorBoundaryProps = PropsWithChildren<{}>;
 
