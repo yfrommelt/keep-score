@@ -3,6 +3,10 @@ import {
   Box,
   Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   TextField,
   ToggleButton,
@@ -25,6 +29,7 @@ export default function GameNew() {
     "Player 1",
     "Player 2",
   ]);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   // Update player names when player count changes
   useEffect(() => {
@@ -46,11 +51,26 @@ export default function GameNew() {
   // Handle player count change
   const handlePlayerCountChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newCount: number | null,
+    newCount: number | null | string,
   ) => {
     if (newCount !== null) {
-      setPlayerCount(newCount);
+      if (newCount === "more") {
+        setModalOpen(true);
+      } else {
+        setPlayerCount(newCount as number);
+      }
     }
+  };
+
+  // Handle modal close
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  // Handle player count selection from modal
+  const handlePlayerCountSelect = (count: number) => {
+    setPlayerCount(count);
+    setModalOpen(false);
   };
 
   // Handle player name change
@@ -66,7 +86,7 @@ export default function GameNew() {
     navigate(`/game/${gameId}`);
   };
 
-  // Generate number buttons from 2 to 8 (max players supported by playerPalette)
+  // Generate number buttons from 2 to 8 (toggle buttons for common player counts)
   const playerCountButtons = [];
   for (let i = 2; i <= 8; i++) {
     playerCountButtons.push(
@@ -75,6 +95,12 @@ export default function GameNew() {
       </ToggleButton>,
     );
   }
+  // Add the "+" button
+  playerCountButtons.push(
+    <ToggleButton key="more" value="more">
+      +
+    </ToggleButton>,
+  );
 
   return (
     <>
@@ -143,6 +169,29 @@ export default function GameNew() {
           Create Game
         </Button>
       </Container>
+
+      {/* Player Count Selection Modal */}
+      <Dialog open={modalOpen} onClose={handleModalClose}>
+        <DialogTitle>Select Number of Players</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            {Array.from({ length: 12 }, (_, i) => i + 9).map((count) => (
+              <Grid size={4} key={count}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => handlePlayerCountSelect(count)}
+                >
+                  {count}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleModalClose}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

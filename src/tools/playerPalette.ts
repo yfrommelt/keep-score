@@ -1,12 +1,23 @@
 import {
   amber,
   blue,
+  blueGrey,
+  brown,
   cyan,
   deepOrange,
   deepPurple,
   green,
+  grey,
+  indigo,
+  lightBlue,
+  lightGreen,
   lime,
+  orange,
+  pink,
+  purple,
   red,
+  teal,
+  yellow,
 } from "@mui/material/colors";
 
 export const playerPalette = [
@@ -18,4 +29,18 @@ export const playerPalette = [
   lime[500],
   amber[500],
   deepOrange[500],
+  // Additional colors to support up to 20 players
+  pink[500],
+  purple[500],
+  indigo[500],
+  teal[500],
+  lightBlue[500],
+  lightGreen[500],
+  yellow[500],
+  orange[500],
+  brown[500],
+  grey[500],
+  blueGrey[500],
+  // Use different shades if more colors are needed
+  red[300],
 ];
