@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { usePlayers } from "./db/selectors";
 import { playerPalette } from "./tools/playerPalette";
+import SharedAppBar from "./components/SharedAppBar";
 
 export default function GameNew() {
   const navigate = useNavigate();
@@ -76,70 +77,72 @@ export default function GameNew() {
   }
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-        New Game
-      </Typography>
+    <>
+      <SharedAppBar title="New Game" showBackButton backTo="/" />
 
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-          Number of Players
-        </Typography>
-        <ToggleButtonGroup
-          value={playerCount}
-          exclusive
-          onChange={handlePlayerCountChange}
-          aria-label="number of players"
-        >
-          {playerCountButtons}
-        </ToggleButtonGroup>
-      </Box>
+      <Container maxWidth="lg">
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
+            Number of Players
+          </Typography>
+          <ToggleButtonGroup
+            value={playerCount}
+            exclusive
+            onChange={handlePlayerCountChange}
+            aria-label="number of players"
+          >
+            {playerCountButtons}
+          </ToggleButtonGroup>
+        </Box>
 
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-          Player Names
-        </Typography>
-        <Grid container spacing={2}>
-          {playerNames.map((name, index) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-              <Autocomplete
-                freeSolo
-                options={(existingPlayers?.map((player) => player.name) || []).filter(name => !name.match(/^Player \d+$/))}
-                value={name}
-                onChange={(_event, newValue) => {
-                  if (newValue) {
-                    handlePlayerNameChange(index, newValue);
-                  }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={`Player ${index + 1}`}
-                    variant="outlined"
-                    fullWidth
-                    className="colored"
-                    onChange={(e) =>
-                      handlePlayerNameChange(index, e.target.value)
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
+            Player Names
+          </Typography>
+          <Grid container spacing={2}>
+            {playerNames.map((name, index) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                <Autocomplete
+                  freeSolo
+                  options={(
+                    existingPlayers?.map((player) => player.name) || []
+                  ).filter((name) => !name.match(/^Player \d+$/))}
+                  value={name}
+                  onChange={(_event, newValue) => {
+                    if (newValue) {
+                      handlePlayerNameChange(index, newValue);
                     }
-                    sx={{
-                      bgcolor: playerPalette[index],
-                    }}
-                  />
-                )}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={`Player ${index + 1}`}
+                      variant="outlined"
+                      fullWidth
+                      className="colored"
+                      onChange={(e) =>
+                        handlePlayerNameChange(index, e.target.value)
+                      }
+                      sx={{
+                        bgcolor: playerPalette[index],
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
-      <Button
-        variant="contained"
-        size="large"
-        onClick={handleCreateGame}
-        disabled={playerNames.some((name) => !name.trim())}
-      >
-        Create Game
-      </Button>
-    </Container>
+        <Button
+          variant="contained"
+          size="large"
+          onClick={handleCreateGame}
+          disabled={playerNames.some((name) => !name.trim())}
+        >
+          Create Game
+        </Button>
+      </Container>
+    </>
   );
 }

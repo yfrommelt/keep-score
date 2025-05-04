@@ -1,8 +1,8 @@
-import { AppBar, Container, Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { useGameDashboard } from "./db/selectors";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PlayerCard from "./components/PlayerCard";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SharedAppBar from "./components/SharedAppBar";
 
 export default function GameDashboard() {
   const { id } = useParams();
@@ -16,23 +16,7 @@ export default function GameDashboard() {
 
   return (
     <>
-      <AppBar position="static" sx={{ mb: 2 }}>
-        <Toolbar>
-          <IconButton
-            component={Link}
-            to="/"
-            edge="start"
-            color="inherit"
-            aria-label="back"
-            sx={{ mr: 2 }}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="h6" component="h1">
-            Game Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <SharedAppBar title="Game Dashboard" showBackButton backTo="/" />
 
       <Container maxWidth="lg">
         <Grid container spacing={1}>
