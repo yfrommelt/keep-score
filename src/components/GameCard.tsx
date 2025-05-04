@@ -23,7 +23,7 @@ type GameCardProps = {
 
 export default function GameCard({ game }: GameCardProps) {
   return (
-    <Card>
+    <Card data-testid="game-card">
       <CardActionArea component={Link} to={`/game/${game.id}`}>
         <CardHeader
           action={
@@ -43,8 +43,13 @@ export default function GameCard({ game }: GameCardProps) {
                     {player.name[0]}
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={player.name} />
-                <Typography>{player.score}</Typography>
+                <ListItemText
+                  primary={player.name}
+                  aria-label={`player name: ${player.name}`}
+                />
+                <Typography aria-label={`player score: ${player.score}`}>
+                  {player.score}
+                </Typography>
               </ListItem>
             ))}
           </List>

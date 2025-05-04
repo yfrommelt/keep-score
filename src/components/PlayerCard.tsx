@@ -90,7 +90,10 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
   }, [playerHistory]);
 
   return (
-    <Card sx={{ bgcolor: playerPalette[index], color: "primary.contrastText" }}>
+    <Card
+      data-testid={`player-card-${player.name}`}
+      sx={{ bgcolor: playerPalette[index], color: "primary.contrastText" }}
+    >
       <CardHeader
         title={player.name}
         action={
@@ -103,31 +106,51 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
       <CardContent>
         <Stack spacing={1} alignItems="space-between">
           <Stack direction="row" spacing={1}>
-            <Button variant="contained" onClick={() => handleScoreChange(-1)}>
+            <Button
+              variant="contained"
+              onClick={() => handleScoreChange(-1)}
+              aria-label="-1"
+            >
               -1
             </Button>
-            <Button variant="contained" onClick={() => handleScoreChange(-5)}>
+            <Button
+              variant="contained"
+              onClick={() => handleScoreChange(-5)}
+              aria-label="-5"
+            >
               -5
             </Button>
-            <Button variant="contained" onClick={() => handleScoreChange(-10)}>
+            <Button
+              variant="contained"
+              onClick={() => handleScoreChange(-10)}
+              aria-label="-10"
+            >
               -10
             </Button>
           </Stack>
           <Box sx={{ position: "relative" }}>
             {scoreDelta !== null ? (
               <Stack direction="row" alignItems="center">
-                <IconButton onClick={handleScoreCancel}>
+                <IconButton
+                  onClick={handleScoreCancel}
+                  aria-label="cancel score"
+                >
                   <ClearIcon />
                 </IconButton>
-                <Button>
-                  <Typography variant="h3" color="primary.contrastText">{scoreDelta}</Typography>
-                                </Button>
-                                <Box sx={{position: 'relative'}}>
-                                    <IconButton onClick={() => handleScoreSave(scoreDelta)}>
-                                        <CheckIcon/>
-                                    </IconButton>
-                                    <SaveCountDown key={scoreDelta} duration={SAVE_TIMEOUT}/>
-                                </Box>
+                <Button aria-label="current score delta">
+                  <Typography variant="h3" color="primary.contrastText">
+                    {scoreDelta}
+                  </Typography>
+                </Button>
+                <Box sx={{ position: "relative" }}>
+                  <IconButton
+                    onClick={() => handleScoreSave(scoreDelta)}
+                    aria-label="save score"
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                  <SaveCountDown key={scoreDelta} duration={SAVE_TIMEOUT} />
+                </Box>
               </Stack>
             ) : (
               <Button
@@ -136,6 +159,7 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
                 aria-haspopup="true"
                 aria-expanded={scoreMenuOpen ? "true" : undefined}
                 onClick={handleScoreEditClick}
+                aria-label={`player score: ${player.score}`}
               >
                 <Typography variant="h3" color="primary.contrastText">
                   {player.score}
@@ -147,8 +171,10 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
               anchorEl={scoreMenuAnchorEl}
               open={scoreMenuOpen}
               onClose={handleScoreEditClose}
-              MenuListProps={{
-                "aria-labelledby": "score-edit-button",
+              slotProps={{
+                list: {
+                  "aria-labelledby": "score-edit-button",
+                },
               }}
             >
               <MenuItem onClick={handleScoreAddZero}>
@@ -166,13 +192,25 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
             </Menu>
           </Box>
           <Stack direction="row" spacing={1}>
-            <Button variant="contained" onClick={() => handleScoreChange(+1)}>
+            <Button
+              variant="contained"
+              onClick={() => handleScoreChange(+1)}
+              aria-label="+1"
+            >
               +1
             </Button>
-            <Button variant="contained" onClick={() => handleScoreChange(+5)}>
+            <Button
+              variant="contained"
+              onClick={() => handleScoreChange(+5)}
+              aria-label="+5"
+            >
               +5
             </Button>
-            <Button variant="contained" onClick={() => handleScoreChange(+10)}>
+            <Button
+              variant="contained"
+              onClick={() => handleScoreChange(+10)}
+              aria-label="+10"
+            >
               +10
             </Button>
           </Stack>

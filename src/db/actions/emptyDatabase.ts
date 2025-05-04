@@ -12,6 +12,6 @@ export async function emptyDatabase() {
       await db.gameScores.clear();
       await db.games.clear();
       await db.players.clear();
-    }
+    },
   );
 }

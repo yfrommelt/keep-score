@@ -1,4 +1,10 @@
-import { Card, CardActionArea, CardContent, Container, Typography } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Container,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { useGameHistory } from "./db/selectors";
 import GameCard from "./components/GameCard";
@@ -15,13 +21,26 @@ export default function GameHistory() {
 
       <Container maxWidth="lg">
         <Masonry columns={{ xs: 2, sm: 3 }} spacing={2}>
-          <Card sx={{ minHeight: 150, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <CardActionArea 
-              component={Link} 
+          <Card
+            sx={{
+              minHeight: 150,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CardActionArea
+              component={Link}
               to="/game/new"
-              sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              <CardContent sx={{ textAlign: 'center' }}>
+              <CardContent sx={{ textAlign: "center" }}>
                 <AddIcon sx={{ fontSize: 40, mb: 1 }} />
                 <Typography variant="body1">New Game</Typography>
               </CardContent>
