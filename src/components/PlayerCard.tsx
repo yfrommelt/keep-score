@@ -23,6 +23,7 @@ import type { Game, Player } from "../types";
 import { usePlayerHistory } from "../db/selectors";
 import { playerPalette } from "../tools/playerPalette";
 import { addPlayerScore, deletePlayerLastScore } from "../db/actions";
+import SaveCountDown from "./score/SaveCountDown";
 
 type PlayerCardProps = {
   game: Game;
@@ -36,13 +37,13 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
   const playerHistory = usePlayerHistory(game.id, player.id);
 
   // Score
-  const [scoreDelta, setScoreDelta] = useState(0);
+  const [scoreDelta, setScoreDelta] = useState<number | null>(null);
   const [saveTimeout, setSaveTimeout] = useState<ReturnType<
     typeof setInterval
   > | null>(null);
 
   const handleScoreChange = (delta: number) => {
-    const score = scoreDelta + delta;
+    const score = (scoreDelta || 0) + delta;
     setScoreDelta(score);
     saveTimeout && clearTimeout(saveTimeout);
     setSaveTimeout(setTimeout(() => handleScoreSave(score), SAVE_TIMEOUT));
@@ -55,7 +56,7 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
 
   const handleScoreCancel = () => {
     saveTimeout && clearTimeout(saveTimeout);
-    setScoreDelta(0);
+    setScoreDelta(null);
   };
 
   const handleScoreAddZero = async () => {
@@ -113,19 +114,20 @@ export default function PlayerCard({ game, player, index }: PlayerCardProps) {
             </Button>
           </Stack>
           <Box sx={{ position: "relative" }}>
-            {scoreDelta !== 0 ? (
+            {scoreDelta !== null ? (
               <Stack direction="row" alignItems="center">
                 <IconButton onClick={handleScoreCancel}>
                   <ClearIcon />
                 </IconButton>
                 <Button>
-                  <Typography variant="h3" color="primary.contrastText">
-                    {scoreDelta}
-                  </Typography>
-                </Button>
-                <IconButton onClick={() => handleScoreSave(scoreDelta)}>
-                  <CheckIcon />
-                </IconButton>
+                  <Typography variant="h3" color="primary.contrastText">{scoreDelta}</Typography>
+                                </Button>
+                                <Box sx={{position: 'relative'}}>
+                                    <IconButton onClick={() => handleScoreSave(scoreDelta)}>
+                                        <CheckIcon/>
+                                    </IconButton>
+                                    <SaveCountDown key={scoreDelta} duration={SAVE_TIMEOUT}/>
+                                </Box>
               </Stack>
             ) : (
               <Button
