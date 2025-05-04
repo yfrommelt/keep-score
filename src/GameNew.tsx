@@ -104,7 +104,7 @@ export default function GameNew() {
             <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Autocomplete
                 freeSolo
-                options={existingPlayers?.map((player) => player.name) || []}
+                options={(existingPlayers?.map((player) => player.name) || []).filter(name => !name.match(/^Player \d+$/))}
                 value={name}
                 onChange={(_event, newValue) => {
                   if (newValue) {
